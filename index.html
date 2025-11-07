@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ethio Earn💵</title>
+<link rel="icon" type= "image/png" href="logo.png">
+<style>
+body { font-family: Arial,sans-serif; background:#0f1724; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; }
+.container { background:#1e293b; padding:25px; border-radius:12px; width:340px; box-shadow:0 0 25px rgba(0,0,0,0.5); }
+h2 { text-align:center; }
+label { display:block; margin-top:12px; }
+input { width:100%; padding:10px; margin-top:5px; border:none; border-radius:6px; background:#334155; color:#fff; }
+button { width:100%; margin-top:18px; padding:10px; border:none; border-radius:6px; background:#06b6d4; color:#012; font-weight:bold; cursor:pointer; }
+button:hover { background:#0891b2; }
+#msg { text-align:center; margin-top:10px; font-size:14px; }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <form id="signupForm">
+    <h2>Register To Earn💵</h2>
+    <label>Full Name</label>
+    <input type="text" id="name" required>
+
+    <label>Phone (Ethiopia)</label>
+    <input type="tel" id="phone" placeholder="09XXXXXXXX or +2519XXXXXXXX" required>
+
+    <label>Password</label>
+    <input type="password" id="password" required>
+
+    <button type="submit">Continue</button>
+    <div id="msg"></div>
+  </form>
+</div>
+
+<script>
+const signupForm = document.getElementById("signupForm");
+const msg = document.getElementById("msg");
+const phoneRegex = /^(09\d{8}|(\+251|251)9\d{8})$/;
+
+signupForm.addEventListener("submit", e => {
+  e.preventDefault();
+  msg.textContent = "";
+
+  const name = document.getElementById("name").value.trim();
+  const phone = document.getElementById("phone").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  if(!name || !phone || !password){
+    msg.textContent = "Please fill all fields."; msg.style.color="#ef4444"; return;
+  }
+  if(!phoneRegex.test(phone)){
+    msg.textContent = "Invalid Ethiopian phone number."; msg.style.color="#ef4444"; return;
+  }
+
+  const users = JSON.parse(localStorage.getItem("users") || "[]");
+  users.push({ name, phone, password, telegramCode:"", status:"Pending" });
+  localStorage.setItem("users", JSON.stringify(users));
+
+  msg.textContent = "✅ Info saved! Proceed to Telegram verification."; msg.style.color="#22c55e";
+
+  setTimeout(()=>{ window.location.href = "telegram.html?phone="+encodeURIComponent(phone); }, 1500);
+});
+</script>
+</body>
+</html>
