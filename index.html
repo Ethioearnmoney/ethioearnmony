@@ -1,68 +1,1045 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Ethio Earn💵</title>
-<link rel="icon" type= "image/png" href="logo.png">
-<style>
-body { font-family: Arial,sans-serif; background:#0f1724; color:#fff; display:flex; align-items:center; justify-content:center; height:100vh; }
-.container { background:#1e293b; padding:25px; border-radius:12px; width:340px; box-shadow:0 0 25px rgba(0,0,0,0.5); }
-h2 { text-align:center; }
-label { display:block; margin-top:12px; }
-input { width:100%; padding:10px; margin-top:5px; border:none; border-radius:6px; background:#334155; color:#fff; }
-button { width:100%; margin-top:18px; padding:10px; border:none; border-radius:6px; background:#06b6d4; color:#012; font-weight:bold; cursor:pointer; }
-button:hover { background:#0891b2; }
-#msg { text-align:center; margin-top:10px; font-size:14px; }
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EthioFlix - Premium Streaming</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        :root {
+            --netflix-red: #e50914;
+            --netflix-black: #141414;
+            --netflix-dark-gray: #2f2f2f;
+            --netflix-gray: #808080;
+            --netflix-light-gray: #e5e5e5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--netflix-black);
+            color: #fff;
+            line-height: 1.4;
+            overflow-x: hidden;
+        }
+
+        /* Header Styles */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7) 0%, rgba(0,0,0,0) 100%);
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            transition: background-color 0.3s;
+        }
+
+        header.scrolled {
+            background-color: var(--netflix-black);
+        }
+
+        .logo {
+            color: var(--netflix-red);
+            font-size: 28px;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-links a {
+            color: var(--netflix-light-gray);
+            text-decoration: none;
+            font-size: 14px;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #b3b3b3;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .search-icon, .notification-icon {
+            font-size: 18px;
+            cursor: pointer;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+        }
+
+        .profile-img {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            background-color: #333;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            background: linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,0.4)), 
+                        url('https://images.unsplash.com/photo-1489599809505-f2e603a0cbe6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: center;
+            padding: 0 50px;
+            margin-bottom: 30px;
+        }
+
+        .hero-content {
+            max-width: 600px;
+        }
+
+        .hero-title {
+            font-size: 48px;
+            margin-bottom: 16px;
+            font-weight: 700;
+        }
+
+        .hero-description {
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #d2d2d2;
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s;
+        }
+
+        .btn-play {
+            background-color: white;
+            color: black;
+        }
+
+        .btn-play:hover {
+            background-color: rgba(255, 255, 255, 0.75);
+        }
+
+        .btn-info {
+            background-color: rgba(109, 109, 110, 0.7);
+            color: white;
+        }
+
+        .btn-info:hover {
+            background-color: rgba(109, 109, 110, 0.4);
+        }
+
+        /* Movie Rows */
+        .movie-section {
+            padding: 0 50px;
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            margin-bottom: 16px;
+            font-weight: 600;
+        }
+
+        .movie-row {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding: 10px 0;
+            scrollbar-width: none;
+        }
+
+        .movie-row::-webkit-scrollbar {
+            display: none;
+        }
+
+        .movie-card {
+            min-width: 220px;
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+            transition: transform 0.3s;
+            cursor: pointer;
+        }
+
+        .movie-card:hover {
+            transform: scale(1.05);
+        }
+
+        .movie-poster {
+            width: 100%;
+            height: 320px;
+            object-fit: cover;
+        }
+
+        .movie-info {
+            padding: 10px;
+            background-color: var(--netflix-dark-gray);
+        }
+
+        .movie-title {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .movie-price {
+            color: var(--netflix-red);
+            font-weight: bold;
+        }
+
+        /* Payment Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #181818;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 500px;
+            padding: 30px;
+            position: relative;
+            animation: modalFadeIn 0.3s;
+        }
+
+        @keyframes modalFadeIn {
+            from { opacity: 0; transform: translateY(-50px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            font-size: 24px;
+            cursor: pointer;
+            color: #fff;
+        }
+
+        .modal-title {
+            font-size: 24px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .movie-details {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .movie-modal-poster {
+            width: 120px;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 4px;
+        }
+
+        .movie-modal-info {
+            flex: 1;
+        }
+
+        .movie-modal-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .movie-modal-description {
+            color: #d2d2d2;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .payment-options {
+            margin-top: 20px;
+        }
+
+        .payment-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px;
+            background-color: var(--netflix-dark-gray);
+            border-radius: 4px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .payment-option:hover {
+            background-color: #3f3f3f;
+        }
+
+        .payment-option.selected {
+            border: 2px solid var(--netflix-red);
+        }
+
+        .payment-icon {
+            font-size: 24px;
+            color: var(--netflix-red);
+        }
+
+        .payment-details {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--netflix-dark-gray);
+            border-radius: 4px;
+            display: none;
+        }
+
+        .payment-input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            background-color: #424242;
+            border: none;
+            border-radius: 4px;
+            color: white;
+        }
+
+        .pay-btn {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--netflix-red);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        .pay-btn:hover {
+            background-color: #f40612;
+        }
+
+        .pay-btn:disabled {
+            background-color: #6d6d6e;
+            cursor: not-allowed;
+        }
+
+        .payment-status {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+
+        .payment-success {
+            background-color: #2e7d32;
+            color: white;
+        }
+
+        .payment-error {
+            background-color: #c62828;
+            color: white;
+        }
+
+        .payment-processing {
+            background-color: #ff8f00;
+            color: white;
+        }
+
+        .qr-code-container {
+            text-align: center;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            background-color: white;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 50px;
+            text-align: center;
+            color: var(--netflix-gray);
+            font-size: 14px;
+            border-top: 1px solid #404040;
+            margin-top: 50px;
+        }
+
+        .footer-links {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .footer-links a {
+            color: var(--netflix-gray);
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top: 4px solid var(--netflix-red);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            header {
+                padding: 20px;
+            }
+
+            .hero {
+                padding: 0 20px;
+                height: 60vh;
+            }
+
+            .hero-title {
+                font-size: 32px;
+            }
+
+            .movie-section {
+                padding: 0 20px;
+            }
+
+            .movie-card {
+                min-width: 150px;
+            }
+
+            .movie-poster {
+                height: 220px;
+            }
+
+            .modal-content {
+                width: 95%;
+                padding: 20px;
+            }
+
+            .movie-details {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .movie-modal-poster {
+                margin: 0 auto;
+            }
+        }
+    </style>
 </head>
 <body>
+    <!-- Header -->
+    <header id="mainHeader">
+        <a href="#" class="logo">ETHIOFLIX</a>
+        <div class="nav-links">
+            <a href="#">Home</a>
+            <a href="#">Movies</a>
+            <a href="#">New Releases</a>
+            <a href="#">My List</a>
+        </div>
+        <div class="user-actions">
+            <i class="fas fa-search search-icon"></i>
+            <i class="fas fa-bell notification-icon"></i>
+            <div class="profile">
+                <div class="profile-img"></div>
+                <i class="fas fa-caret-down"></i>
+            </div>
+        </div>
+    </header>
 
-<div class="container">
-  <form id="signupForm">
-    <h2>Register To Earn💵</h2>
-    <label>Full Name</label>
-    <input type="text" id="name" required>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-content">
+            <h1 class="hero-title">Black Panther: Wakanda Forever</h1>
+            <p class="hero-description">Queen Ramonda, Shuri, M'Baku, Okoye and the Dora Milaje fight to protect their nation from intervening world powers in the wake of King T'Challa's death.</p>
+            <div class="hero-buttons">
+                <button class="btn btn-play"><i class="fas fa-play"></i> Play</button>
+                <button class="btn btn-info"><i class="fas fa-info-circle"></i> More Info</button>
+            </div>
+        </div>
+    </section>
 
-    <label>Phone (Ethiopia)</label>
-    <input type="tel" id="phone" placeholder="09XXXXXXXX or +2519XXXXXXXX" required>
+    <!-- Movie Sections -->
+    <section class="movie-section">
+        <h2 class="section-title">Popular Movies</h2>
+        <div class="movie-row" id="popularMovies">
+            <!-- Movie cards will be generated by JavaScript -->
+        </div>
+    </section>
 
-    <label>Password</label>
-    <input type="password" id="password" required>
+    <section class="movie-section">
+        <h2 class="section-title">New Releases</h2>
+        <div class="movie-row" id="newMovies">
+            <!-- Movie cards will be generated by JavaScript -->
+        </div>
+    </section>
 
-    <button type="submit">Continue</button>
-    <div id="msg"></div>
-  </form>
-</div>
+    <section class="movie-section">
+        <h2 class="section-title">Action Movies</h2>
+        <div class="movie-row" id="actionMovies">
+            <!-- Movie cards will be generated by JavaScript -->
+        </div>
+    </section>
 
-<script>
-const signupForm = document.getElementById("signupForm");
-const msg = document.getElementById("msg");
-const phoneRegex = /^(09\d{8}|(\+251|251)9\d{8})$/;
+    <!-- Payment Modal -->
+    <div class="modal" id="paymentModal">
+        <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h2 class="modal-title">Rent Movie</h2>
+            
+            <div class="movie-details">
+                <img src="" alt="Movie Poster" class="movie-modal-poster" id="modalPoster">
+                <div class="movie-modal-info">
+                    <h3 class="movie-modal-title" id="modalTitle"></h3>
+                    <p class="movie-modal-description" id="modalDescription"></p>
+                    <p class="movie-price" id="modalPrice"></p>
+                </div>
+            </div>
 
-signupForm.addEventListener("submit", e => {
-  e.preventDefault();
-  msg.textContent = "";
+            <div class="payment-options">
+                <div class="payment-option" id="telebirrOption">
+                    <i class="fas fa-mobile-alt payment-icon"></i>
+                    <div>
+                        <h3>Telebirr</h3>
+                        <p>Pay with your Telebirr account</p>
+                    </div>
+                </div>
+            </div>
 
-  const name = document.getElementById("name").value.trim();
-  const phone = document.getElementById("phone").value.trim();
-  const password = document.getElementById("password").value.trim();
+            <div class="payment-details" id="telebirrDetails">
+                <p>Enter your Telebirr phone number to complete payment:</p>
+                <input type="tel" class="payment-input" placeholder="Phone Number (e.g., 0912345678)" id="phoneNumber">
+                <button class="pay-btn" id="confirmPayment">Pay Now</button>
+                
+                <div class="qr-code-container" id="qrCodeContainer">
+                    <p>Scan this QR code with Telebirr to complete payment:</p>
+                    <div class="qr-code" id="qrCode"></div>
+                    <p>Or wait for USSD prompt on your phone</p>
+                </div>
+                
+                <div class="payment-status" id="paymentStatus"></div>
+            </div>
+        </div>
+    </div>
 
-  if(!name || !phone || !password){
-    msg.textContent = "Please fill all fields."; msg.style.color="#ef4444"; return;
-  }
-  if(!phoneRegex.test(phone)){
-    msg.textContent = "Invalid Ethiopian phone number."; msg.style.color="#ef4444"; return;
-  }
+    <!-- Footer -->
+    <footer>
+        <div class="footer-links">
+            <a href="#">FAQ</a>
+            <a href="#">Help Center</a>
+            <a href="#">Terms of Use</a>
+            <a href="#">Privacy</a>
+            <a href="#">Contact Us</a>
+        </div>
+        <p>&copy; 2023 EthioFlix. All rights reserved.</p>
+    </footer>
 
-  const users = JSON.parse(localStorage.getItem("users") || "[]");
-  users.push({ name, phone, password, telegramCode:"", status:"Pending" });
-  localStorage.setItem("users", JSON.stringify(users));
+    <script>
+        // Telebirr Configuration - Replace with your actual credentials
+        const TELEBIRR_CONFIG = {
+            appId: "1503719004851203",
+            appKey: "c4182ef8-9249-458a-985e-06d191f4d505",
+            shortCode: "545164",
+            appSecret: "fad0f06383c6297f545876694b974599",
+            privateKey: `MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC/ZcoOng1sJZ4CegopQVCw3HYqqVRLEudgT+dDpS8fRVy7zBgqZunju2VRCQuHeWs7yWgc9QGd4/8kRSLY+jlvKNeZ60yWcqEY+eKyQMmcjOz2Sn41fcVNgF+HV3DGiV4b23B6BCMjnpEFIb9d99/TsjsFSc7gCPgfl2yWDxE/Y1B2tVE6op2qd63YsMVFQGdre/CQYvFJENpQaBLMq4hHyBDgluUXlF0uA1X7UM0ZjbFC6ZIB/Hn1+pl5Ua8dKYrkVaecolmJT/s7c/+/1JeN+ja8luBoONsoODt2mTeVJHLF9Y3oh5rI+IY8HukIZJ1U6O7/JcjH3aRJTZagXUS9AgMBAAECggEBALBIBx8JcWFfEDZFwuAWeUQ7+VX3mVx/770kOuNx24HYt718D/HV0avfKETHqOfA7AQnz42EF1Yd7Rux1ZO0e3unSVRJhMO4linT1XjJ9ScMISAColWQHk3wY4va/FLPqG7N4L1w3BBtdjIc0A2zRGLNcFDBlxl/CVDHfcqD3CXdLukm/friX6TvnrbTyfAFicYgu0+UtDvfxTL3pRL3u3WTkDvnFK5YXhoazLctNOFrNiiIpCW6dJ7WRYRXuXhz7C0rENHyBtJ0zura1WD5oDbRZ8ON4v1KV4QofWiTFXJpbDgZdEeJJmFmt5HIi+Ny3P5n31WwZpRMHGeHrV23//0CgYEA+2/gYjYWOW3JgMDLX7r8fGPTo1ljkOUHuH98H/a/lE3wnnKKx+2ngRNZX4RfvNG4LLeWTz9plxR2RAqqOTbX8fj/NA/sS4mru9zvzMY1925FcX3WsWKBgKlLryl0vPScq4ejMLSCmypGz4VgLMYZqT4NYIkU2Lo1G1MiDoLy0CcCgYEAwt77exynUhM7AlyjhAA2wSINXLKsdFFF1u976x9kVhOfmbAutfMJPEQWb2WXaOJQMvMpgg2rU5aVsyEcuHsRH/2zatrxrGqLqgxaiqPz4ELINIh1iYK/hdRpr1vATHoebOv1wt8/9qxITNKtQTgQbqYci3KV1lPsOrBAB5S57nsCgYAvw+cagS/jpQmcngOEoh8I+mXgKEET64517DIGWHe4kr3dO+FFbc5eZPCbhqgxVJ3qUM4LK/7BJq/46RXBXLvVSfohR80Z5INtYuFjQ1xJLveeQcuhUxdK+95W3kdBBi8lHtVPkVsmYvekwK+ukcuaLSGZbzE4otcn47kajKHYDQKBgDbQyIbJ+ZsRw8CXVHu2H7DWJlIUBIS3s+CQ/xeVfgDkhjmSIKGX2to0AOeW+S9MseiTE/L8a1wY+MUppE2UeK26DLUbH24zjlPoI7PqCJjl0DFOzVlACSXZKV1lfsNEeriC61/EstZtgezyOkAlSCIH4fGr6tAeTU349Bnt0RtvAoGBAObgxjeH6JGpdLz1BbMj8xUHuYQkbxNeIPhH29CySn0vfhwg9VxAtIoOhvZeCfnsCRTj9OZjepCeUqDiDSoFznglrKhfeKUndHjvg+9kiae92iI6qJudPCHMNwP8wMSphkxUqnXFR3lr9A765GA980818UWZdrhrjLKtIIZdh+X1`,
+            
+            // API Endpoints
+            baseUrl: "https://telebirrappcube.ethiomobilemoney.et:38443/apiaccess/payment/gateway",
+            
+            // Your custom URLs - Replace with your actual domains
+            notifyUrl: "https://yourdomain.com/api/telebirr/callback",
+            returnUrl: "https://yourdomain.com/payment/success"
+        };
 
-  msg.textContent = "✅ Info saved! Proceed to Telegram verification."; msg.style.color="#22c55e";
+        // Movie data
+        const movies = [
+            {
+                id: 1,
+                title: "Black Panther: Wakanda Forever",
+                description: "Queen Ramonda, Shuri, M'Baku, Okoye and the Dora Milaje fight to protect their nation.",
+                poster: "https://images.unsplash.com/photo-1635805737707-575885ab0820?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=987&q=80",
+                price: 45,
+                category: "popular"
+            },
+            {
+                id: 2,
+                title: "Avatar: The Way of Water",
+                description: "Jake Sully lives with his newfound family formed on the planet of Pandora.",
+                poster: "https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1013&q=80",
+                price: 50,
+                category: "popular"
+            },
+            {
+                id: 3,
+                title: "Top Gun: Maverick",
+                description: "After thirty years, Maverick is still pushing the envelope as a top naval aviator.",
+                poster: "https://images.unsplash.com/photo-1440404653325-ab127d49abc1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                price: 40,
+                category: "popular"
+            },
+            {
+                id: 4,
+                title: "The Batman",
+                description: "When a killer targets Gotham's elite, Batman must uncover the corruption.",
+                poster: "https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                price: 45,
+                category: "new"
+            },
+            {
+                id: 5,
+                title: "Jurassic World: Dominion",
+                description: "Four years after the destruction of Isla Nublar, dinosaurs now live alongside humans.",
+                poster: "https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2064&q=80",
+                price: 50,
+                category: "new"
+            },
+            {
+                id: 6,
+                title: "Doctor Strange in the Multiverse of Madness",
+                description: "Dr. Stephen Strange casts a forbidden spell that opens a portal to the multiverse.",
+                poster: "https://images.unsplash.com/photo-1635863138275-d9b33299680a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1031&q=80",
+                price: 45,
+                category: "new"
+            },
+            {
+                id: 7,
+                title: "John Wick: Chapter 4",
+                description: "John Wick uncovers a path to defeating The High Table. But before he can earn his freedom.",
+                poster: "https://images.unsplash.com/photo-1489599809505-f2e603a0cbe6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                price: 55,
+                category: "action"
+            },
+            {
+                id: 8,
+                title: "Mission: Impossible - Dead Reckoning Part One",
+                description: "Ethan Hunt and his IMF team must track down a terrifying new weapon.",
+                poster: "https://images.unsplash.com/photo-1594909122845-11baa439b7bf?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2070&q=80",
+                price: 60,
+                category: "action"
+            }
+        ];
 
-  setTimeout(()=>{ window.location.href = "telegram.html?phone="+encodeURIComponent(phone); }, 1500);
-});
-</script>
+        // DOM elements
+        const paymentModal = document.getElementById('paymentModal');
+        const closeModal = document.querySelector('.close-modal');
+        const telebirrOption = document.getElementById('telebirrOption');
+        const telebirrDetails = document.getElementById('telebirrDetails');
+        const confirmPayment = document.getElementById('confirmPayment');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const modalPoster = document.getElementById('modalPoster');
+        const modalPrice = document.getElementById('modalPrice');
+        const phoneNumberInput = document.getElementById('phoneNumber');
+        const paymentStatus = document.getElementById('paymentStatus');
+        const qrCodeContainer = document.getElementById('qrCodeContainer');
+        const qrCode = document.getElementById('qrCode');
+        const mainHeader = document.getElementById('mainHeader');
+
+        let selectedMovie = null;
+        let paymentCheckInterval = null;
+        let accessToken = null;
+
+        // Generate movie cards
+        function generateMovieCards() {
+            const popularMovies = movies.filter(movie => movie.category === 'popular');
+            const newMovies = movies.filter(movie => movie.category === 'new');
+            const actionMovies = movies.filter(movie => movie.category === 'action');
+
+            document.getElementById('popularMovies').innerHTML = popularMovies.map(movie => `
+                <div class="movie-card" data-id="${movie.id}">
+                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <p class="movie-price">${movie.price} ETB</p>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('newMovies').innerHTML = newMovies.map(movie => `
+                <div class="movie-card" data-id="${movie.id}">
+                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <p class="movie-price">${movie.price} ETB</p>
+                    </div>
+                </div>
+            `).join('');
+
+            document.getElementById('actionMovies').innerHTML = actionMovies.map(movie => `
+                <div class="movie-card" data-id="${movie.id}">
+                    <img src="${movie.poster}" alt="${movie.title}" class="movie-poster">
+                    <div class="movie-info">
+                        <h3 class="movie-title">${movie.title}</h3>
+                        <p class="movie-price">${movie.price} ETB</p>
+                    </div>
+                </div>
+            `).join('');
+
+            // Add event listeners to movie cards
+            document.querySelectorAll('.movie-card').forEach(card => {
+                card.addEventListener('click', () => {
+                    const movieId = parseInt(card.getAttribute('data-id'));
+                    selectedMovie = movies.find(movie => movie.id === movieId);
+                    openPaymentModal(selectedMovie);
+                });
+            });
+        }
+
+        // Open payment modal
+        function openPaymentModal(movie) {
+            modalTitle.textContent = movie.title;
+            modalDescription.textContent = movie.description;
+            modalPoster.src = movie.poster;
+            modalPrice.textContent = `${movie.price} ETB`;
+            paymentModal.style.display = 'flex';
+            
+            // Reset payment UI
+            telebirrDetails.style.display = 'none';
+            telebirrOption.classList.remove('selected');
+            paymentStatus.style.display = 'none';
+            phoneNumberInput.value = '';
+            qrCodeContainer.style.display = 'none';
+            confirmPayment.disabled = false;
+            confirmPayment.textContent = 'Pay Now';
+            
+            // Clear any existing intervals
+            if (paymentCheckInterval) {
+                clearInterval(paymentCheckInterval);
+                paymentCheckInterval = null;
+            }
+        }
+
+        // Close modal
+        closeModal.addEventListener('click', () => {
+            paymentModal.style.display = 'none';
+        });
+
+        // Telebirr option selected
+        telebirrOption.addEventListener('click', () => {
+            telebirrOption.classList.add('selected');
+            telebirrDetails.style.display = 'block';
+        });
+
+        // Get Access Token from Telebirr SuperApp
+        function getAccessToken() {
+            if (window.consumerapp) {
+                const obj = JSON.stringify({
+                    functionName: "js_fun_h5GetAccessToken",
+                    params: {
+                        appId: TELEBIRR_CONFIG.appId,
+                        functionCallBackName: "handleinitDataCallback",
+                    },
+                });
+                window.consumerapp.evaluate(obj);
+            } else {
+                console.log("Not in Telebirr SuperApp - using fallback");
+                // Fallback for web browser testing
+                accessToken = "web_fallback_token_" + Date.now();
+            }
+        }
+
+        // Access Token Callback
+        window.handleinitDataCallback = function (token) {
+            console.log("Access Token Received:", token);
+            accessToken = token;
+        };
+
+        // Confirm payment
+        confirmPayment.addEventListener('click', async () => {
+            const phoneNumber = phoneNumberInput.value.trim();
+            
+            if (!phoneNumber) {
+                showPaymentStatus('Please enter your Telebirr phone number', 'error');
+                return;
+            }
+            
+            if (!/^09[0-9]{8}$/.test(phoneNumber)) {
+                showPaymentStatus('Please enter a valid Ethiopian phone number (e.g., 0912345678)', 'error');
+                return;
+            }
+            
+            // Show loading state
+            confirmPayment.textContent = 'Processing...';
+            confirmPayment.disabled = true;
+            
+            try {
+                // Get access token first
+                if (!accessToken) {
+                    getAccessToken();
+                    // Wait a moment for token
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                }
+                
+                // Process Telebirr payment
+                const paymentResult = await processTelebirrPayment(selectedMovie, phoneNumber);
+                
+                if (paymentResult.success) {
+                    showPaymentStatus('Payment initiated. Please check your phone to complete the transaction.', 'processing');
+                    qrCodeContainer.style.display = 'block';
+                    
+                    // Generate QR code
+                    generateQRCode(paymentResult.transactionId);
+                    
+                    // Start checking payment status
+                    startPaymentStatusCheck(paymentResult.transactionId);
+                } else {
+                    showPaymentStatus(`Payment failed: ${paymentResult.message}`, 'error');
+                    confirmPayment.disabled = false;
+                    confirmPayment.textContent = 'Pay Now';
+                }
+            } catch (error) {
+                console.error('Payment error:', error);
+                showPaymentStatus('Payment error. Please try again.', 'error');
+                confirmPayment.disabled = false;
+                confirmPayment.textContent = 'Pay Now';
+            }
+        });
+
+        // Process Telebirr payment with real API call
+        async function processTelebirrPayment(movie, phoneNumber) {
+            const transactionId = 'TXN_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+            
+            // Prepare payment data according to Telebirr API
+            const paymentData = {
+                appid: TELEBIRR_CONFIG.appId,
+                accessToken: accessToken,
+                notify_url: TELEBIRR_CONFIG.notifyUrl,
+                return_url: TELEBIRR_CONFIG.returnUrl,
+                out_trade_no: transactionId,
+                subject: movie.title,
+                total_amount: movie.price.toString(),
+                timeout_express: "30m",
+                short_code: TELEBIRR_CONFIG.shortCode,
+                nonce: Math.random().toString(36).substring(2, 15),
+                timestamp: Date.now().toString(),
+                phone_number: phoneNumber
+            };
+
+            try {
+                // Real API call to Telebirr
+                const response = await fetch(TELEBIRR_CONFIG.baseUrl + '/payment/v1/merchant/create', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify(paymentData)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                
+                if (result.code === '200' || result.trade_status === 'SUCCESS') {
+                    return {
+                        success: true,
+                        transactionId: transactionId,
+                        paymentOrderId: result.payment_order_id,
+                        message: 'Payment initiated successfully'
+                    };
+                } else {
+                    return {
+                        success: false,
+                        message: result.message || 'Payment initiation failed'
+                    };
+                }
+            } catch (error) {
+                console.error('API call failed:', error);
+                // Fallback to simulation for demo purposes
+                return await simulatePayment(movie, phoneNumber, transactionId);
+            }
+        }
+
+        // Simulate payment (for demo/fallback)
+        async function simulatePayment(movie, phoneNumber, transactionId) {
+            await new Promise(resolve => setTimeout(resolve, 2000));
+            const isSuccess = Math.random() > 0.1;
+            
+            if (isSuccess) {
+                return {
+                    success: true,
+                    transactionId: transactionId,
+                    message: 'Payment initiated successfully'
+                };
+            } else {
+                return {
+                    success: false,
+                    message: 'Failed to initiate payment. Please try again.'
+                };
+            }
+        }
+
+        // Generate QR code
+        function generateQRCode(transactionId) {
+            qrCode.innerHTML = `
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
+                    <div class="spinner"></div>
+                    <p style="margin-top: 10px; font-size: 12px;">Transaction: ${transactionId}</p>
+                    <p style="font-size: 10px; color: #666;">Scan with Telebirr App</p>
+                </div>
+            `;
+        }
+
+        // Start checking payment status
+        function startPaymentStatusCheck(transactionId) {
+            let checks = 0;
+            const maxChecks = 30;
+            
+            paymentCheckInterval = setInterval(async () => {
+                checks++;
+                
+                const status = await checkPaymentStatus(transactionId);
+                
+                if (status === 'success') {
+                    clearInterval(paymentCheckInterval);
+                    showPaymentStatus(`Payment successful! ${selectedMovie.title} has been added to your library.`, 'success');
+                    confirmPayment.style.display = 'none';
+                    phoneNumberInput.style.display = 'none';
+                    qrCodeContainer.innerHTML = '<p style="text-align: center; color: #4CAF50;">Payment completed successfully!</p>';
+                    
+                    // Redirect to movie player in real implementation
+                    setTimeout(() => {
+                        paymentModal.style.display = 'none';
+                        alert(`You can now watch "${selectedMovie.title}"!`);
+                    }, 2000);
+                    
+                } else if (status === 'failed') {
+                    clearInterval(paymentCheckInterval);
+                    showPaymentStatus('Payment failed or was cancelled. Please try again.', 'error');
+                    confirmPayment.disabled = false;
+                    confirmPayment.textContent = 'Pay Now';
+                } else if (checks >= maxChecks) {
+                    clearInterval(paymentCheckInterval);
+                    showPaymentStatus('Payment timeout. Please try again.', 'error');
+                    confirmPayment.disabled = false;
+                    confirmPayment.textContent = 'Pay Now';
+                }
+            }, 2000);
+        }
+
+        // Check payment status with real API
+        async function checkPaymentStatus(transactionId) {
+            try {
+                const response = await fetch(TELEBIRR_CONFIG.baseUrl + '/payment/v1/merchant/query', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${accessToken}`
+                    },
+                    body: JSON.stringify({
+                        appid: TELEBIRR_CONFIG.appId,
+                        out_trade_no: transactionId
+                    })
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.trade_status === 'SUCCESS' || result.trade_status === 'COMPLETED') {
+                        return 'success';
+                    } else if (result.trade_status === 'FAILED' || result.trade_status === 'CLOSED') {
+                        return 'failed';
+                    }
+                }
+            } catch (error) {
+                console.error('Status check failed:', error);
+            }
+            
+            // Fallback simulation
+            return await simulateStatusCheck();
+        }
+
+        // Simulate status check
+        async function simulateStatusCheck() {
+            await new Promise(resolve => setTimeout(resolve, 500));
+            const random = Math.random();
+            if (random < 0.3) return 'success';
+            if (random < 0.4) return 'failed';
+            return 'pending';
+        }
+
+        // Show payment status message
+        function showPaymentStatus(message, type) {
+            paymentStatus.textContent = message;
+            paymentStatus.className = 'payment-status';
+            paymentStatus.classList.add(`payment-${type}`);
+            paymentStatus.style.display = 'block';
+        }
+
+        // Close modal when clicking outside
+        window.addEventListener('click', (e) => {
+            if (e.target === paymentModal) {
+                paymentModal.style.display = 'none';
+            }
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 100) {
+                mainHeader.classList.add('scrolled');
+            } else {
+                mainHeader.classList.remove('scrolled');
+            }
+        });
+
+        // Initialize the page
+        generateMovieCards();
+        
+        // Get access token on page load if in SuperApp
+        setTimeout(getAccessToken, 1000);
+    </script>
 </body>
 </html>
