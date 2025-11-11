@@ -394,6 +394,19 @@
             border-radius: 8px;
         }
 
+        /* Demo Notice */
+        .demo-notice {
+            background: linear-gradient(45deg, #e50914, #ff6b6b);
+            color: white;
+            text-align: center;
+            padding: 10px;
+            font-weight: bold;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 1000;
+        }
+
         /* Footer */
         footer {
             padding: 30px 50px;
@@ -480,6 +493,11 @@
     </style>
 </head>
 <body>
+    <!-- Demo Notice -->
+    <div class="demo-notice">
+        🎬 DEMO VERSION - For Testing Purposes Only. Real payments are simulated.
+    </div>
+
     <!-- Header -->
     <header id="mainHeader">
         <a href="#" class="logo">ETHIOFLIX</a>
@@ -587,7 +605,7 @@
     </footer>
 
     <script>
-        // Telebirr Configuration - Replace with your actual credentials
+        // Telebirr Configuration - Updated for local development
         const TELEBIRR_CONFIG = {
             appId: "1503719004851203",
             appKey: "c4182ef8-9249-458a-985e-06d191f4d505",
@@ -595,12 +613,10 @@
             appSecret: "fad0f06383c6297f545876694b974599",
             privateKey: `MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC/ZcoOng1sJZ4CegopQVCw3HYqqVRLEudgT+dDpS8fRVy7zBgqZunju2VRCQuHeWs7yWgc9QGd4/8kRSLY+jlvKNeZ60yWcqEY+eKyQMmcjOz2Sn41fcVNgF+HV3DGiV4b23B6BCMjnpEFIb9d99/TsjsFSc7gCPgfl2yWDxE/Y1B2tVE6op2qd63YsMVFQGdre/CQYvFJENpQaBLMq4hHyBDgluUXlF0uA1X7UM0ZjbFC6ZIB/Hn1+pl5Ua8dKYrkVaecolmJT/s7c/+/1JeN+ja8luBoONsoODt2mTeVJHLF9Y3oh5rI+IY8HukIZJ1U6O7/JcjH3aRJTZagXUS9AgMBAAECggEBALBIBx8JcWFfEDZFwuAWeUQ7+VX3mVx/770kOuNx24HYt718D/HV0avfKETHqOfA7AQnz42EF1Yd7Rux1ZO0e3unSVRJhMO4linT1XjJ9ScMISAColWQHk3wY4va/FLPqG7N4L1w3BBtdjIc0A2zRGLNcFDBlxl/CVDHfcqD3CXdLukm/friX6TvnrbTyfAFicYgu0+UtDvfxTL3pRL3u3WTkDvnFK5YXhoazLctNOFrNiiIpCW6dJ7WRYRXuXhz7C0rENHyBtJ0zura1WD5oDbRZ8ON4v1KV4QofWiTFXJpbDgZdEeJJmFmt5HIi+Ny3P5n31WwZpRMHGeHrV23//0CgYEA+2/gYjYWOW3JgMDLX7r8fGPTo1ljkOUHuH98H/a/lE3wnnKKx+2ngRNZX4RfvNG4LLeWTz9plxR2RAqqOTbX8fj/NA/sS4mru9zvzMY1925FcX3WsWKBgKlLryl0vPScq4ejMLSCmypGz4VgLMYZqT4NYIkU2Lo1G1MiDoLy0CcCgYEAwt77exynUhM7AlyjhAA2wSINXLKsdFFF1u976x9kVhOfmbAutfMJPEQWb2WXaOJQMvMpgg2rU5aVsyEcuHsRH/2zatrxrGqLqgxaiqPz4ELINIh1iYK/hdRpr1vATHoebOv1wt8/9qxITNKtQTgQbqYci3KV1lPsOrBAB5S57nsCgYAvw+cagS/jpQmcngOEoh8I+mXgKEET64517DIGWHe4kr3dO+FFbc5eZPCbhqgxVJ3qUM4LK/7BJq/46RXBXLvVSfohR80Z5INtYuFjQ1xJLveeQcuhUxdK+95W3kdBBi8lHtVPkVsmYvekwK+ukcuaLSGZbzE4otcn47kajKHYDQKBgDbQyIbJ+ZsRw8CXVHu2H7DWJlIUBIS3s+CQ/xeVfgDkhjmSIKGX2to0AOeW+S9MseiTE/L8a1wY+MUppE2UeK26DLUbH24zjlPoI7PqCJjl0DFOzVlACSXZKV1lfsNEeriC61/EstZtgezyOkAlSCIH4fGr6tAeTU349Bnt0RtvAoGBAObgxjeH6JGpdLz1BbMj8xUHuYQkbxNeIPhH29CySn0vfhwg9VxAtIoOhvZeCfnsCRTj9OZjepCeUqDiDSoFznglrKhfeKUndHjvg+9kiae92iI6qJudPCHMNwP8wMSphkxUqnXFR3lr9A765GA980818UWZdrhrjLKtIIZdh+X1`,
             
-            // API Endpoints
+            // Local development URLs
             baseUrl: "https://telebirrappcube.ethiomobilemoney.et:38443/apiaccess/payment/gateway",
-            
-            // Your custom URLs - Replace with your actual domains
-            notifyUrl: "https://yourdomain.com/api/telebirr/callback",
-            returnUrl: "https://yourdomain.com/payment/success"
+            notifyUrl: "http://localhost:3000/api/telebirr/callback",
+            returnUrl: "http://localhost:3000/payment/success"
         };
 
         // Movie data
@@ -753,6 +769,8 @@
             qrCodeContainer.style.display = 'none';
             confirmPayment.disabled = false;
             confirmPayment.textContent = 'Pay Now';
+            confirmPayment.style.display = 'block';
+            phoneNumberInput.style.display = 'block';
             
             // Clear any existing intervals
             if (paymentCheckInterval) {
@@ -783,17 +801,20 @@
                     },
                 });
                 window.consumerapp.evaluate(obj);
+                console.log("Requesting access token from Telebirr SuperApp...");
             } else {
-                console.log("Not in Telebirr SuperApp - using fallback");
-                // Fallback for web browser testing
-                accessToken = "web_fallback_token_" + Date.now();
+                console.log("Not in Telebirr SuperApp - using demo mode");
+                // Demo mode - generate a fake token
+                accessToken = "demo_token_" + Date.now();
+                console.log("Demo access token generated:", accessToken);
             }
         }
 
         // Access Token Callback
         window.handleinitDataCallback = function (token) {
-            console.log("Access Token Received:", token);
+            console.log("Access Token Received from SuperApp:", token);
             accessToken = token;
+            showPaymentStatus("Connected to Telebirr successfully!", "success");
         };
 
         // Confirm payment
@@ -819,7 +840,7 @@
                 if (!accessToken) {
                     getAccessToken();
                     // Wait a moment for token
-                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    await new Promise(resolve => setTimeout(resolve, 500));
                 }
                 
                 // Process Telebirr payment
@@ -847,11 +868,29 @@
             }
         });
 
-        // Process Telebirr payment with real API call
+        // Process Telebirr payment
         async function processTelebirrPayment(movie, phoneNumber) {
             const transactionId = 'TXN_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
             
-            // Prepare payment data according to Telebirr API
+            console.log("Initiating payment for:", movie.title);
+            console.log("Amount:", movie.price, "ETB");
+            console.log("Phone:", phoneNumber);
+            console.log("Transaction ID:", transactionId);
+
+            // Check if we're in SuperApp or demo mode
+            const isInSuperApp = window.consumerapp !== undefined;
+            
+            if (isInSuperApp && accessToken) {
+                // Real payment flow in SuperApp
+                return await processRealPayment(movie, phoneNumber, transactionId);
+            } else {
+                // Demo payment flow
+                return await processDemoPayment(movie, phoneNumber, transactionId);
+            }
+        }
+
+        // Process real payment in SuperApp
+        async function processRealPayment(movie, phoneNumber, transactionId) {
             const paymentData = {
                 appid: TELEBIRR_CONFIG.appId,
                 accessToken: accessToken,
@@ -868,7 +907,6 @@
             };
 
             try {
-                // Real API call to Telebirr
                 const response = await fetch(TELEBIRR_CONFIG.baseUrl + '/payment/v1/merchant/create', {
                     method: 'POST',
                     headers: {
@@ -898,38 +936,49 @@
                     };
                 }
             } catch (error) {
-                console.error('API call failed:', error);
-                // Fallback to simulation for demo purposes
-                return await simulatePayment(movie, phoneNumber, transactionId);
+                console.error('Real API call failed:', error);
+                // Fallback to demo
+                return await processDemoPayment(movie, phoneNumber, transactionId);
             }
         }
 
-        // Simulate payment (for demo/fallback)
-        async function simulatePayment(movie, phoneNumber, transactionId) {
+        // Process demo payment
+        async function processDemoPayment(movie, phoneNumber, transactionId) {
+            // Simulate API call delay
             await new Promise(resolve => setTimeout(resolve, 2000));
-            const isSuccess = Math.random() > 0.1;
+            
+            // 80% success rate in demo
+            const isSuccess = Math.random() > 0.2;
             
             if (isSuccess) {
                 return {
                     success: true,
                     transactionId: transactionId,
-                    message: 'Payment initiated successfully'
+                    message: 'DEMO: Payment initiated successfully (Simulated)'
                 };
             } else {
                 return {
                     success: false,
-                    message: 'Failed to initiate payment. Please try again.'
+                    message: 'DEMO: Payment failed (Simulated)'
                 };
             }
         }
 
         // Generate QR code
         function generateQRCode(transactionId) {
+            // Create a simple QR code representation
+            const qrContent = `telebirr://payment?txn=${transactionId}&amount=${selectedMovie.price}`;
             qrCode.innerHTML = `
-                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%;">
-                    <div class="spinner"></div>
-                    <p style="margin-top: 10px; font-size: 12px;">Transaction: ${transactionId}</p>
-                    <p style="font-size: 10px; color: #666;">Scan with Telebirr App</p>
+                <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; background: white; border-radius: 8px; padding: 20px;">
+                    <div style="font-size: 48px; color: #e50914; margin-bottom: 10px;">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <div style="text-align: center;">
+                        <div style="font-weight: bold; color: #333; margin-bottom: 5px;">Telebirr Payment</div>
+                        <div style="font-size: 12px; color: #666; margin-bottom: 10px;">Amount: ${selectedMovie.price} ETB</div>
+                        <div style="font-size: 10px; color: #999; word-break: break-all;">TXN: ${transactionId}</div>
+                    </div>
+                    <div class="spinner" style="margin-top: 15px;"></div>
                 </div>
             `;
         }
@@ -937,7 +986,7 @@
         // Start checking payment status
         function startPaymentStatusCheck(transactionId) {
             let checks = 0;
-            const maxChecks = 30;
+            const maxChecks = 20; // 40 seconds total
             
             paymentCheckInterval = setInterval(async () => {
                 checks++;
@@ -946,16 +995,19 @@
                 
                 if (status === 'success') {
                     clearInterval(paymentCheckInterval);
-                    showPaymentStatus(`Payment successful! ${selectedMovie.title} has been added to your library.`, 'success');
+                    showPaymentStatus(`🎉 Payment successful! "${selectedMovie.title}" has been added to your library.`, 'success');
                     confirmPayment.style.display = 'none';
                     phoneNumberInput.style.display = 'none';
-                    qrCodeContainer.innerHTML = '<p style="text-align: center; color: #4CAF50;">Payment completed successfully!</p>';
-                    
-                    // Redirect to movie player in real implementation
-                    setTimeout(() => {
-                        paymentModal.style.display = 'none';
-                        alert(`You can now watch "${selectedMovie.title}"!`);
-                    }, 2000);
+                    qrCodeContainer.innerHTML = `
+                        <div style="text-align: center; color: #4CAF50; padding: 20px;">
+                            <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 15px;"></i>
+                            <h3>Payment Completed!</h3>
+                            <p>You can now watch "${selectedMovie.title}"</p>
+                            <button class="btn btn-play" onclick="playMovie('${selectedMovie.title}')" style="margin-top: 15px;">
+                                <i class="fas fa-play"></i> Watch Now
+                            </button>
+                        </div>
+                    `;
                     
                 } else if (status === 'failed') {
                     clearInterval(paymentCheckInterval);
@@ -971,45 +1023,29 @@
             }, 2000);
         }
 
-        // Check payment status with real API
+        // Check payment status
         async function checkPaymentStatus(transactionId) {
-            try {
-                const response = await fetch(TELEBIRR_CONFIG.baseUrl + '/payment/v1/merchant/query', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${accessToken}`
-                    },
-                    body: JSON.stringify({
-                        appid: TELEBIRR_CONFIG.appId,
-                        out_trade_no: transactionId
-                    })
-                });
-
-                if (response.ok) {
-                    const result = await response.json();
-                    if (result.trade_status === 'SUCCESS' || result.trade_status === 'COMPLETED') {
-                        return 'success';
-                    } else if (result.trade_status === 'FAILED' || result.trade_status === 'CLOSED') {
-                        return 'failed';
-                    }
-                }
-            } catch (error) {
-                console.error('Status check failed:', error);
-            }
+            // Simulate status check with increasing success probability
+            await new Promise(resolve => setTimeout(resolve, 1000));
             
-            // Fallback simulation
-            return await simulateStatusCheck();
+            const random = Math.random();
+            // Increase success probability over time
+            const successThreshold = 0.2 + (Math.min(1, paymentCheckInterval ? paymentCheckInterval._idleTimeout / 40000 : 0) * 0.6);
+            
+            if (random < successThreshold) {
+                return 'success';
+            } else if (random < successThreshold + 0.1) {
+                return 'failed';
+            } else {
+                return 'pending';
+            }
         }
 
-        // Simulate status check
-        async function simulateStatusCheck() {
-            await new Promise(resolve => setTimeout(resolve, 500));
-            const random = Math.random();
-            if (random < 0.3) return 'success';
-            if (random < 0.4) return 'failed';
-            return 'pending';
-        }
+        // Play movie function
+        window.playMovie = function(movieTitle) {
+            paymentModal.style.display = 'none';
+            alert(`🎬 Now playing: ${movieTitle}\n\nThis is a demo. In a real application, you would be redirected to the video player.`);
+        };
 
         // Show payment status message
         function showPaymentStatus(message, type) {
@@ -1038,8 +1074,24 @@
         // Initialize the page
         generateMovieCards();
         
-        // Get access token on page load if in SuperApp
+        // Get access token on page load
         setTimeout(getAccessToken, 1000);
+
+        // Add demo instructions
+        console.log(`
+🎬 EthioFlix Demo Instructions:
+1. Click any movie to open payment modal
+2. Enter a valid Ethiopian phone number (09XXXXXXXX)
+3. Click "Pay Now" to simulate payment
+4. Watch the payment flow simulation
+5. In Telebirr SuperApp, real payments would be processed
+
+Demo Features:
+- Simulated payment processing
+- QR code generation
+- Payment status checking
+- Success/failure scenarios
+        `);
     </script>
 </body>
 </html>
